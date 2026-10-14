@@ -1,0 +1,57 @@
+[package]
+name = "verified-deflate"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.80"
+description = "gzip, zlib, raw DEFLATE and BGZF compression with LZ77 parsers proved correct in Lean"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/conjectures-io/verified-deflate"
+homepage = "https://conjectures.io/competitions/deflate"
+documentation = "https://docs.rs/verified-deflate"
+readme = "README.md"
+keywords = ["gzip", "deflate", "zlib", "compression", "verified"]
+categories = ["compression", "command-line-utilities"]
+include = [
+    "/src/**",
+    "/parsers/**",
+    "/README.md",
+    "/CHANGELOG.md",
+    "/LICENSE-MIT",
+    "/LICENSE-APACHE",
+    "/NOTICE",
+]
+
+[lib]
+path = "src/lib.rs"
+
+[[bin]]
+name = "vgzip"
+path = "src/bin/vgzip.rs"
+required-features = ["cli"]
+
+[features]
+default = ["cli"]
+# The `vgzip` command; decompression (-d) uses flate2's pure-Rust inflater.
+cli = ["dep:flate2"]
+
+[dependencies]
+crc32fast = "1.4"
+adler2 = "2"
+flate2 = { version = "1.0", optional = true }
+
+[dev-dependencies]
+flate2 = "1.0"
+miniz_oxide = "0.8"
+libdeflater = "1.22"
+sha2 = "0.10"
+
+[profile.release]
+opt-level = 3
+lto = "fat"
+codegen-units = 1
+
+[profile.test]
+opt-level = 3
+
+[package.metadata.docs.rs]
+all-features = true
