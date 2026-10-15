@@ -81,15 +81,19 @@ miniz_oxide = "0.8" # in-memory buffers
 use std::io::Read;
 
 // gzip or BGZF (BGZF is multi-member gzip), streaming from any reader:
-let mut data = Vec::new();
-flate2::read::MultiGzDecoder::new(std::fs::File::open("out.gz")?).read_to_end(&mut data)?;
+let mut from_gzip = Vec::new();
+flate2::read::MultiGzDecoder::new(std::fs::File::open("out.gz")?).read_to_end(&mut from_gzip)?;
 
 // zlib or raw DEFLATE, in memory:
-let zlib_bytes = std::fs::read("out.zz")?;
-let data = miniz_oxide::inflate::decompress_to_vec_zlib(&zlib_bytes).expect("valid zlib");
-let raw_bytes = std::fs::read("out.deflate")?;
-let data = miniz_oxide::inflate::decompress_to_vec(&raw_bytes).expect("valid DEFLATE");
+let from_zlib = miniz_oxide::inflate::decompress_to_vec_zlib(&std::fs::read("out.zz")?)
+    .map_err(|e| format!("invalid zlib data: {:?}", e.status))?;
+let from_deflate = miniz_oxide::inflate::decompress_to_vec(&std::fs::read("out.deflate")?)
+    .map_err(|e| format!("invalid DEFLATE data: {:?}", e.status))?;
 ```
+
+Like the other examples, this runs inside a function returning
+`Result<_, Box<dyn std::error::Error>>`. miniz_oxide's error type doesn't implement
+`std::error::Error`, hence the `map_err`.
 
 On the command line: `gunzip`, `zcat`, `vgzip -d`, or `samtools`/`tabix` for BGZF.
 
