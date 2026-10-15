@@ -19,6 +19,9 @@ include = [
     "/LICENSE-MIT",
     "/LICENSE-APACHE",
     "/NOTICE",
+    "/LICENSES/**",
+    "/REUSE.toml",
+    "/CITATION.cff",
 ]
 
 [lib]

@@ -1,0 +1,28 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+type: software
+title: "verified-deflate: DEFLATE compression with LZ77 parsers proved correct in Lean"
+abstract: >-
+  gzip, zlib, raw DEFLATE and BGZF compression whose LZ77 parsers are proved correct in
+  Lean 4: for every input, the tokens a parser emits decode back to that input. The
+  parsers are submissions #521, #85 and #243 to the conjectures.io DEFLATE competition
+  (September and October 2026), included unmodified with the proofs the competition's
+  validator accepted.
+authors:
+  - name: "Dendrite Holdings"
+    website: "https://dendrite.holdings"
+  - name: "Conjectures.io"
+    website: "https://conjectures.io"
+version: "0.1.0"
+license:
+  - MIT
+  - Apache-2.0
+repository-code: "https://github.com/conjectures-io/conjectures-deflate"
+url: "https://conjectures.io/competitions/deflate"
+keywords:
+  - compression
+  - deflate
+  - gzip
+  - zlib
+  - formal verification
+  - lean

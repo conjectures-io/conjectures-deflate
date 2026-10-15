@@ -1,0 +1,41 @@
+# Copyright and licence of every file, in the REUSE format (https://reuse.software).
+# The last matching annotation applies, so the parser entries below refine the default.
+version = 1
+
+[[annotations]]
+path = "**"
+precedence = "aggregate"
+SPDX-FileCopyrightText = ["2026 Dendrite Holdings", "2026 Conjectures.io"]
+SPDX-License-Identifier = "MIT OR Apache-2.0"
+
+# The parsers and their proofs are DEFLATE competition submissions: written by the
+# competition participant named here, on the competition's template and specification.
+[[annotations]]
+path = "parsers/p521/**"
+precedence = "aggregate"
+SPDX-FileCopyrightText = [
+    "2026 Dendrite Holdings",
+    "2026 Conjectures.io",
+    "2026 DEFLATE competition submission #521, Bittensor hotkey 5DtLFqKpPzwUQSJ8s9NsL4K7qevfivohCx2VPASnS4hK3dxT",
+]
+SPDX-License-Identifier = "MIT OR Apache-2.0"
+
+[[annotations]]
+path = "parsers/p85/**"
+precedence = "aggregate"
+SPDX-FileCopyrightText = [
+    "2026 Dendrite Holdings",
+    "2026 Conjectures.io",
+    "2026 DEFLATE competition submission #85, Bittensor hotkey 5Dvu6sE2qVL6TD4sYmEGv9rAan5GXsV7MMef32HMm67viwxP",
+]
+SPDX-License-Identifier = "MIT OR Apache-2.0"
+
+[[annotations]]
+path = "parsers/p243/**"
+precedence = "aggregate"
+SPDX-FileCopyrightText = [
+    "2026 Dendrite Holdings",
+    "2026 Conjectures.io",
+    "2026 DEFLATE competition submission #243, Bittensor hotkey 5E1ih2hfMg5x6HGMQsRZ4gerXmq4Hu5S9bmG1ZLcBLyezJWH",
+]
+SPDX-License-Identifier = "MIT OR Apache-2.0"

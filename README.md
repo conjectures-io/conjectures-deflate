@@ -13,6 +13,13 @@ held up best on real data none of them had been tuned on.
 The output is ordinary DEFLATE. gunzip, zlib, browsers, Python's `gzip`, `unzip` and
 samtools read it unchanged; nothing new is needed to decompress.
 
+## Origin
+
+Developed by [Dendrite Holdings](https://dendrite.holdings)
+([GitHub](https://github.com/DendriteLabs)) for [Conjectures.io](https://conjectures.io).
+The LZ77 parsers are the work of the DEFLATE competition participants credited in
+[Where the code comes from](#where-the-code-comes-from).
+
 ## Install
 
 ```bash
@@ -202,7 +209,11 @@ Licensed under either of
 - Apache License, Version 2.0 ([LICENSE-APACHE](LICENSE-APACHE))
 - MIT license ([LICENSE-MIT](LICENSE-MIT))
 
-at your option. See [NOTICE](NOTICE) for the competition submissions and their authors.
+at your option. Copyright (c) 2026 Dendrite Holdings and Conjectures.io; the parsers in
+`parsers/` are also the work of the competition participants named in [NOTICE](NOTICE).
+Per-file copyright and licence information is in [REUSE.toml](REUSE.toml)
+([REUSE](https://reuse.software) compliant), and [CITATION.cff](CITATION.cff) says how to
+cite this crate.
 
 Unless you explicitly state otherwise, any contribution intentionally submitted for
 inclusion in this crate by you, as defined in the Apache-2.0 license, shall be dual

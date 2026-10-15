@@ -1,5 +1,7 @@
 verified-deflate
-Copyright (c) 2026 conjectures.io and the DEFLATE competition participants
+Copyright (c) 2026 Dendrite Holdings
+Copyright (c) 2026 Conjectures.io
+The parsers in parsers/ are also the work of the competition participants named below.
 Licensed under the MIT License or the Apache License, Version 2.0, at your option.
 
 The LZ77 parsers and their Lean proofs in parsers/ are submissions to the
