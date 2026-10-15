@@ -209,8 +209,8 @@ Licensed under either of
 - Apache License, Version 2.0 ([LICENSE-APACHE](LICENSE-APACHE))
 - MIT license ([LICENSE-MIT](LICENSE-MIT))
 
-at your option. Copyright (c) 2026 Dendrite Holdings and Conjectures.io; the parsers in
-`parsers/` are also the work of the competition participants named in [NOTICE](NOTICE).
+at your option. Copyright (c) 2026 Dendrite Holdings, Conjectures.io and the DEFLATE
+competition participants, whose submissions in `parsers/` are listed in [NOTICE](NOTICE).
 Per-file copyright and licence information is in [REUSE.toml](REUSE.toml)
 ([REUSE](https://reuse.software) compliant), and [CITATION.cff](CITATION.cff) says how to
 cite this crate.
