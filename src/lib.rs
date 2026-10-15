@@ -23,6 +23,34 @@
 //! Input is compressed in chunks (1 MiB by default) that each see the previous
 //! 32 KiB as history, so memory stays bounded (20–45 MiB) for any input size and
 //! the result is a single continuous stream.
+//!
+//! ## Decompressing
+//!
+//! This crate only compresses. Its output is standard, so any inflater reads it,
+//! e.g. [`flate2`](https://docs.rs/flate2) for gzip, zlib and BGZF (a multi-member
+//! gzip file), or [`miniz_oxide`](https://docs.rs/miniz_oxide) for in-memory buffers:
+//!
+//! ```
+//! use std::io::Read;
+//! use verified_deflate::{bgzf, deflate, gzip, zlib, Level};
+//!
+//! let data = b"hello hello hello hello".repeat(100);
+//!
+//! // gzip, with flate2 (`MultiGzDecoder` also reads BGZF and concatenated members).
+//! let mut out = Vec::new();
+//! flate2::read::MultiGzDecoder::new(&gzip(&data, Level::Max)[..]).read_to_end(&mut out)?;
+//! assert_eq!(out, data);
+//!
+//! // BGZF is gzip too.
+//! let mut out = Vec::new();
+//! flate2::read::MultiGzDecoder::new(&bgzf::compress(&data, Level::High)[..]).read_to_end(&mut out)?;
+//! assert_eq!(out, data);
+//!
+//! // zlib and raw DEFLATE, with miniz_oxide.
+//! assert_eq!(miniz_oxide::inflate::decompress_to_vec_zlib(&zlib(&data, Level::High)).unwrap(), data);
+//! assert_eq!(miniz_oxide::inflate::decompress_to_vec(&deflate(&data, Level::Balanced)).unwrap(), data);
+//! # Ok::<(), std::io::Error>(())
+//! ```
 
 mod encoder;
 mod stream;

@@ -59,6 +59,33 @@ gz.finish()?;
 Dependencies of the library: `crc32fast` and `adler2`. The `cli` feature (on by
 default) adds `flate2` for `vgzip -d`.
 
+## Decompressing
+
+This crate only compresses. The output is standard, so use any inflater, e.g.
+[`flate2`](https://crates.io/crates/flate2) or [`miniz_oxide`](https://crates.io/crates/miniz_oxide):
+
+```toml
+[dependencies]
+flate2 = "1"        # streams: gzip, zlib, BGZF
+miniz_oxide = "0.8" # in-memory buffers
+```
+
+```rust
+use std::io::Read;
+
+// gzip or BGZF (BGZF is multi-member gzip), streaming from any reader:
+let mut data = Vec::new();
+flate2::read::MultiGzDecoder::new(std::fs::File::open("out.gz")?).read_to_end(&mut data)?;
+
+// zlib or raw DEFLATE, in memory:
+let zlib_bytes = std::fs::read("out.zz")?;
+let data = miniz_oxide::inflate::decompress_to_vec_zlib(&zlib_bytes).expect("valid zlib");
+let raw_bytes = std::fs::read("out.deflate")?;
+let data = miniz_oxide::inflate::decompress_to_vec(&raw_bytes).expect("valid DEFLATE");
+```
+
+On the command line: `gunzip`, `zcat`, `vgzip -d`, or `samtools`/`tabix` for BGZF.
+
 ## Levels and what to expect
 
 | level | parser | large files¹ | web assets² | logs³ | speed⁴ |
@@ -112,7 +139,36 @@ history, which makes that case 7–45× slower than zlib.
 - **Determinism**: the same input and options always give the same bytes, however the
   input is split across `write` calls. gzip headers carry no file name or time.
 
-## Where the parsers come from
+## Where the code comes from
+
+| part | files | written by |
+|---|---|---|
+| LZ77 parsers and their Lean proofs | `parsers/p521`, `parsers/p85`, `parsers/p243` | the competition's miners (table below), unmodified |
+| Huffman coding and block writing | `src/encoder.rs` | the competition's shared encoder, written for the competition by its operator; made incremental for this crate |
+| Adaptive block splitting | `src/encoder.rs` (`split_ranges`) | written for this crate; the idea (cut where symbol statistics change, keep a cut only if the exact cost drops) is the one zopfli's block splitter popularised |
+| Token format | `src/token.rs` | the competition's, unchanged |
+| Streaming, gzip/zlib/BGZF framing, `vgzip` | `src/stream.rs`, `src/lib.rs`, `src/bgzf.rs`, `src/bin/vgzip.rs` | written for this crate; the API's shape (`GzEncoder`, `finish`, `try_finish`) follows flate2's so it feels familiar |
+
+The formats follow their specifications: RFC 1951 (DEFLATE), RFC 1950 (zlib),
+RFC 1952 (gzip) and the SAM/BAM specification §4.1 (BGZF). The lookup tables they imply
+(length and distance codes, extra bits, the code-length order) are the same in every
+DEFLATE implementation.
+
+**How this was checked.** Every source file here was compared with miniz_oxide 0.8.9,
+zopfli 0.8.4, flate2 1.1.10, libdeflate 1.26 and zlib 1.3.2 (12-token runs with comments
+removed, both verbatim and with identifiers renamed), and with all of the competition's
+example parsers. The parsers and the encoder share at most about 1% with any of those
+libraries, and only the RFC lookup tables above; the parsers also contain none of those
+libraries' characteristic identifiers (`nice_match`, `max_chain`, `hc_matchfinder`,
+`SymbolStats`, …). The writers in `src/lib.rs` and `src/bgzf.rs` share 6–11% of their
+token runs with flate2's `write.rs`: `std::io::Write` method signatures and the method
+names this API mirrors on purpose; the bodies are different. #521 and #243 share at
+most 0.5% with the competition's examples; #85 builds on the competition's `optimal-iter`
+example (4.5% shared), which the competition's miner guide invites miners to do. One
+competition example, `mo-lazy`, is an acknowledged reimplementation of miniz_oxide's
+level-9 strategy; none of these parsers uses code specific to it.
+
+### The parsers
 
 `parsers/p<id>/parse.rs` is each submission's source, byte for byte, and
 `parsers/p<id>/Parse.lean` the proof the validator accepted. Each `parse.rs` hashes to

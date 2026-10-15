@@ -15,3 +15,16 @@ Originals: https://conjectures.io/v1/competitions/deflate/submissions/<id>/sourc
 The DEFLATE encoder in src/encoder.rs is the competition's shared encoder
 (https://github.com/conjectures-io/conjectures-optimisation-deflate,
 validator/measure/src/deflate.rs), made incremental, with adaptive block splitting.
+
+parsers/p85 builds on the competition's own `optimal-iter` example parser.
+
+src/encoder.rs: the adaptive block splitting is new code; its idea (split where the
+symbol statistics change, keep a split only if the exact cost drops) follows the block
+splitter popularised by zopfli (https://github.com/google/zopfli).
+
+The public API's shape (GzEncoder, ZlibEncoder, DeflateEncoder, finish, try_finish)
+follows flate2 (https://github.com/rust-lang/flate2-rs) so it is familiar to Rust users;
+no flate2 code is included in the library.
+
+Formats: RFC 1950 (zlib), RFC 1951 (DEFLATE), RFC 1952 (gzip), SAM/BAM specification
+section 4.1 (BGZF).
